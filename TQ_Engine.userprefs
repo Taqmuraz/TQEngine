@@ -1,0 +1,15 @@
+﻿<Properties StartupItem="TQ_Engine\TQ_Engine.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="TQ_Engine\Game_0.cs">
+    <Files>
+      <File FileName="TQ_Engine\Program.cs" Line="42" Column="26" />
+      <File FileName="TQ_Engine\Drawable.cs" Line="17" Column="3" />
+      <File FileName="TQ_Engine\Game_0.cs" Line="18" Column="3" />
+      <File FileName="TQ_Engine\Included.cs" Line="203" Column="65" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
