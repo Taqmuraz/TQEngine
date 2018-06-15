@@ -2,3 +2,4 @@ C:\UnityProjects\TQ_Engine\TQ_Engine\bin\Debug\TQ_Engine.exe
 C:\UnityProjects\TQ_Engine\TQ_Engine\bin\Debug\TQ_Engine.pdb
 C:\UnityProjects\TQ_Engine\TQ_Engine\obj\x86\Debug\TQ_Engine.exe
 C:\UnityProjects\TQ_Engine\TQ_Engine\obj\x86\Debug\TQ_Engine.pdb
+C:\UnityProjects\TQ_Engine\TQ_Engine\obj\x86\Debug\TQ_Engine.csprojResolveAssemblyReference.cache
