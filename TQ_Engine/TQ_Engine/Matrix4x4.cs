@@ -51,19 +51,51 @@ public class Matrix4x4
 	private float i = 0;
 
 	public Matrix4x4 () {
-		eulerAngles = Vector.zero;
-		position = Vector.zero;
+		localEulerAngles = Vector.zero;
+		localPosition = Vector.zero;
 		scale = Vector.one;
 		forward = Vector.forward;
 		right = Vector.right;
 		up = Vector.up;
 	}
+	public Matrix4x4 (Vector _position, Vector _euler, Vector _scale) {
+		scale = _scale;
+		forward = Vector.forward;
+		right = Vector.right;
+		up = Vector.up;
+		localEulerAngles = _euler;
+		localPosition = _position;
+	}
 
-	public Vector eulerAngles
+	public Matrix4x4 parent { get; private set; }
+
+	public Vector globalEulerAngles
+	{
+		get {
+			Vector euler = localEulerAngles;
+			Matrix4x4 p = parent;
+			while (p != null) {
+				euler += p.localEulerAngles;
+				p = p.parent;
+			}
+			return euler;
+		}
+		set {
+			Vector glob = globalEulerAngles;
+			Vector delta = value - glob;
+			localEulerAngles += delta;
+		}
+	}
+
+	public static Vector ClampEuler (Vector origin) {
+		return new Vector(origin.x % 360, origin.y % 360, origin.z % 360);
+	}
+
+	public Vector localEulerAngles
 	{
 		get
 		{
-			return new Vector(eulerAnglesGetter.x % 360, eulerAnglesGetter.y % 360, eulerAnglesGetter.z % 360);
+			return ClampEuler (eulerAnglesGetter);
 		}
 		set
 		{
@@ -73,8 +105,26 @@ public class Matrix4x4
 	}
 	private Vector eulerAnglesGetter = Vector.zero;
 
+	public Vector globalPosition
+	{
+		get {
+			Vector pos = localPosition;
+			Matrix4x4 p = parent;
+			while (p != null) {
+				pos *= p;
+				p = p.parent;
+			}
+			return pos;
+		}
+		set {
+			Vector delta = value - globalPosition;
+			Vector plus = parent != null ? delta / parent : delta;
+			localPosition += plus;
+		}
+	}
+
 	public Vector scale { get; set; }
-	public Vector position { get; set; }
+	public Vector localPosition { get; set; }
 
 	public static Vector Cross (Vector a, Vector b) {
 		a = a.normalized;
@@ -144,19 +194,42 @@ public class Matrix4x4
 		right = xAxis;
 	}
 	public static Vector operator * (Vector b, Matrix4x4 m) {
+		return (b > m) + m.globalPosition;
+	}
+	public static Vector operator > (Vector b, Matrix4x4 m) {
 		b = new Vector (b.x * m.scale.x, b.y * m.scale.y, b.z * m.scale.z);
 		Vector x = m.right * b.x;
 		Vector y = m.up * b.y;
 		Vector z = m.forward * b.z;
-		return x + y + z + m.position;
+		return x + y + z;
 	}
 	public static Vector operator / (Vector v, Matrix4x4 m) {
-		v -= m.position;
+		v -= m.globalPosition;
+		return ToLocal(v, m);
+	}
+
+	public static Vector ToLocal (Vector v, Matrix4x4 m) {
 		Vector r = new Vector (v.x * m.right.x + v.y * m.right.y + v.z * m.right.z,
-		                         v.x * m.up.x + v.y * m.up.y + v.z * m.up.z,
-		                         v.x * m.forward.x + v.y * m.forward.y + v.z * m.forward.z);
+			v.x * m.up.x + v.y * m.up.y + v.z * m.up.z,
+			v.x * m.forward.x + v.y * m.forward.y + v.z * m.forward.z);
 		r = new Vector (r.x * m.scale.x, r.y * m.scale.y, r.z * m.scale.z);
 		return r;
+	}
+
+	public static Vector operator < (Vector v, Matrix4x4 m) {
+		return ToLocal (v, m);
+	}
+
+	public override string ToString ()
+	{
+		return string.Format ("[Matrix4x4: parent={0},"
+			+ '\n' + " globalEulerAngles={1}, "
+			+ '\n' + " localEulerAngles={2}, "
+			+ '\n' + " globalPosition={3}, "
+			+ '\n' + " scale={4}, localPosition={5}, "
+			+ '\n' + " forward={6}, "
+			+ '\n' + " up={7}, "
+			+ '\n' + " right={8}]", parent, globalEulerAngles, localEulerAngles, globalPosition, scale, localPosition, forward, up, right);
 	}
 }
 

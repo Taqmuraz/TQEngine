@@ -271,10 +271,60 @@ public class Input
 				case inp.Key.D:
 					v += Vector.right;
 					break;
+				case inp.Key.E:
+					v += Vector.up;
+					break;
+				case inp.Key.Q:
+					v += Vector.down;
+					break;
 				}
 			}
 			return v.normalized;
 		}
+	}
+
+	public static Vector arrows_right
+	{
+		get {
+			Vector v = Vector.zero;
+			inp.Key[] keys = keyboard.GetPressedKeys();
+			foreach (var k in keys) {
+				switch (k) {
+				case inp.Key.LeftArrow:
+					v += Vector.left;
+					break;
+				case inp.Key.UpArrow:
+					v += Vector.forward;
+					break;
+				case inp.Key.DownArrow:
+					v += Vector.back;
+					break;
+				case inp.Key.RightArrow:
+					v += Vector.right;
+					break;
+				case inp.Key.PageUp:
+					v += Vector.up;
+					break;
+				case inp.Key.PageDown:
+					v += Vector.down;
+					break;
+				}
+			}
+			return v.normalized;
+		}
+	}
+
+
+	public static bool IsKeyPressed (inp.Key key) {
+		inp.Key[] input = keyboard.GetPressedKeys ();
+		bool has = false;
+		foreach (var k in input) {
+			if (k == key) {
+				has = true;
+				break;
+			}
+		}
+		return has;
 	}
 
 	public static inp.Device keyboard { get; private set; }

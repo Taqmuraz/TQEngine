@@ -41,6 +41,15 @@ namespace Rendering
 		public Renderer (Matrix4x4 _matrix, Model _model) {
 			matrix = _matrix;
 			model = _model;
+			RenderForm.renderers.Add (this);
+		}
+
+		public void Destroy () {
+			RenderForm.renderers.Remove (this);
+			foreach (var m in model.materials) {
+				m.texture.Dispose ();
+			}
+			model.mesh.Dispose ();
 		}
 	}
 
@@ -49,12 +58,12 @@ namespace Rendering
 		public float drawDistance { get; private set; }
 
 		public void MoveAt (Vector3 at) {
-			position = at * this;
+			globalPosition = at * this;
 		}
 
 		public Camera (float dist, Vector _position, Vector _fwd, Vector _up) {
 			drawDistance = dist;
-			position = _position;
+			globalPosition = _position;
 			forward = _fwd;
 			up = _up;
 			scale = Vector.one;
